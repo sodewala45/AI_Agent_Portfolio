@@ -51,9 +51,10 @@ with col2:
 
 with col3:
     st.markdown("""<div class="agent-card">
-    <h3>🎯 Job Search Agent</h3>
-    <p>ATS keyword optimization and profile matching for remote AI roles.</p>
+    <h3>🎯 AI Elite linkedin Auto Job Hunter & Poster</h3>
+    <p>Autonomous job discovery with >50% match filtering and one-click outreach.</p>
     </div>""", unsafe_allow_html=True)
+    # Ensure this link matches your NEW Job Search Space URL
     st.link_button("Launch Agent", "https://huggingface.co/spaces/sodewala45/Job_Search_Agent")
 
 st.divider()
