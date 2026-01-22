@@ -1,58 +1,51 @@
 import streamlit as st
-import os
+import pandas as pd  # <--- This fixes the error!
+import streamlit.components.v1 as components
 
-# 1. ANALYTICS LOGIC: Tracking Clicks
-# In a real production environment, you'd use a database. 
-# Here, we'll simulate the dashboard view for you.
+# 1. PAGE SETUP
+st.set_page_config(page_title="AI Agent Portfolio", layout="wide")
 
+# 2. ANALYTICS SESSION STATE
+# Note: On Hugging Face, this resets when the app sleeps. 
+# For permanent storage, we would connect Google Sheets next.
 if 'analytics' not in st.session_state:
     st.session_state.analytics = {
-        "TikTok Agent": 12,    # Mock data to start
-        "Logistics Agent": 8,
-        "Job Hunter": 25
+        "TikTok Agent": 0,
+        "Logistics Agent": 0,
+        "Job Hunter": 0
     }
 
-def track_click(agent_name):
-    st.session_state.analytics[agent_name] += 1
-    # Optimization: You can send this data to a Google Sheet via API later!
-    st.toast(f"Metric Updated: {agent_name} click tracked!")
+# 3. ANALYTICS DASHBOARD (Admin View)
+st.title("🌐 My AI Agent Ecosystem")
 
-# 2. THE DASHBOARD VIEW (Only visible to you)
-with st.expander("📊 Recruiter Insights (Admin View)"):
-    st.write("See which projects are attracting the most attention:")
-    
-    # Create a nice bar chart of your traffic
-    chart_data = pd.DataFrame({
+with st.expander("📊 Portfolio Analytics (Admin)"):
+    st.write("Real-time engagement tracking:")
+    # Create the DataFrame safely now that pd is imported
+    df_stats = pd.DataFrame({
         'Agent': list(st.session_state.analytics.keys()),
         'Clicks': list(st.session_state.analytics.values())
     })
-    st.bar_chart(chart_data.set_index('Agent'))
+    st.bar_chart(df_stats.set_index('Agent'))
 
-# 3. UPDATED BUTTONS
-col1, col2, col3 = st.columns(3)
-
-with col1:
-    if st.button("Launch TikTok Agent"):
-        track_click("TikTok Agent")
-        st.js_code("window.open('https://huggingface.co/spaces/your-username/TikTok_Agent')")
-
-with col2:
-    if st.button("Launch Logistics Agent"):
-        track_click("Logistics Agent")
-        st.js_code("window.open('https://huggingface.co/spaces/your-username/Logistics_Agent')")
-
-with col3:
-    if st.button("Launch Job Hunter"):
-        track_click("Job Hunter")
-        st.js_code("window.open('https://huggingface.co/spaces/your-username/Job_Search_Agent')")
 st.divider()
 
-# 4. CONTACT / FOOTER
-st.subheader("📬 Let's Connect")
-c1, c2, c3 = st.columns(3)
-with c1:
-    st.info("**Available for Remote AI Roles**")
-with c2:
-    st.success("**Expertise: Python, CI/CD, Streamlit**")
-with c3:
-    st.link_button("View My LinkedIn", "https://www.linkedin.com/in/sodewala")
+# 4. AGENT GRID
+col1, col2, col3 = st.columns(3)
+
+def create_agent_card(column, title, desc, link, key):
+    with column:
+        st.subheader(title)
+        st.write(desc)
+        if st.button(f"Launch {title}", key=key):
+            st.session_state.analytics[title] += 1
+            # JavaScript to open the link in a new tab
+            components.html(f"""
+                <script>
+                window.open('{link}', '_blank');
+                </script>
+            """, height=0)
+            st.rerun()
+
+create_agent_card(col1, "TikTok Agent", "E-commerce Lead Gen & Content Automation.", "https://huggingface.co/spaces/sodewala45/TikTok_Agent", "btn1")
+create_agent_card(col2, "Logistics Agent", "Supply Chain Route & Inventory Optimizer.", "https://huggingface.co/spaces/sodewala45/Logistics_Agent", "btn2")
+create_agent_card(col3, "Job Hunter", "Autonomous Job Scouting & Match Filtering.", "https://huggingface.co/spaces/sodewala45/Job_Search_Agent", "btn3")
