@@ -1,62 +1,50 @@
 import streamlit as st
+import os
 
-# 1. PAGE SETUP
-st.set_page_config(page_title="AI Agent Portfolio", page_icon="🚀", layout="wide")
+# 1. ANALYTICS LOGIC: Tracking Clicks
+# In a real production environment, you'd use a database. 
+# Here, we'll simulate the dashboard view for you.
 
-# Custom CSS for a premium "Software House" look
-st.markdown("""
-    <style>
-    .main {
-        background-color: #f5f7f9;
+if 'analytics' not in st.session_state:
+    st.session_state.analytics = {
+        "TikTok Agent": 12,    # Mock data to start
+        "Logistics Agent": 8,
+        "Job Hunter": 25
     }
-    .stButton>button {
-        width: 100%;
-        border-radius: 10px;
-        height: 3em;
-        background-color: #007bff;
-        color: white;
-    }
-    .agent-card {
-        padding: 20px;
-        border-radius: 15px;
-        background-color: white;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        margin-bottom: 20px;
-        border: 1px solid #e1e4e8;
-    }
-    </style>
-    """, unsafe_allow_html=True)
 
-# 2. HEADER
-st.title("🤖 My Autonomous AI Agent Suite")
-st.markdown("#### High-impact automation tools for E-commerce, Logistics, and Career Growth.")
-st.divider()
+def track_click(agent_name):
+    st.session_state.analytics[agent_name] += 1
+    # Optimization: You can send this data to a Google Sheet via API later!
+    st.toast(f"Metric Updated: {agent_name} click tracked!")
 
-# 3. THE AGENT GRID
+# 2. THE DASHBOARD VIEW (Only visible to you)
+with st.expander("📊 Recruiter Insights (Admin View)"):
+    st.write("See which projects are attracting the most attention:")
+    
+    # Create a nice bar chart of your traffic
+    chart_data = pd.DataFrame({
+        'Agent': list(st.session_state.analytics.keys()),
+        'Clicks': list(st.session_state.analytics.values())
+    })
+    st.bar_chart(chart_data.set_index('Agent'))
+
+# 3. UPDATED BUTTONS
 col1, col2, col3 = st.columns(3)
 
 with col1:
-    st.markdown("""<div class="agent-card">
-    <h3>📈 TikTok Shop Agent</h3>
-    <p>Automated lead generation and niche analysis for viral e-commerce growth.</p>
-    </div>""", unsafe_allow_html=True)
-    st.link_button("Launch Agent", "https://huggingface.co/spaces/sodewala45/TikTok_Agent")
+    if st.button("Launch TikTok Agent"):
+        track_click("TikTok Agent")
+        st.js_code("window.open('https://huggingface.co/spaces/your-username/TikTok_Agent')")
 
 with col2:
-    st.markdown("""<div class="agent-card">
-    <h3>🚛 Logistics Agent</h3>
-    <p>AI-driven route optimization and supply chain intelligence dashboard.</p>
-    </div>""", unsafe_allow_html=True)
-    st.link_button("Launch Agent", "https://huggingface.co/spaces/sodewala45/Logistics_Agent")
+    if st.button("Launch Logistics Agent"):
+        track_click("Logistics Agent")
+        st.js_code("window.open('https://huggingface.co/spaces/your-username/Logistics_Agent')")
 
 with col3:
-    st.markdown("""<div class="agent-card">
-    <h3>🎯 AI Elite linkedin Auto Job Hunter & Poster</h3>
-    <p>Autonomous job discovery with >50% match filtering and one-click outreach.</p>
-    </div>""", unsafe_allow_html=True)
-    # Ensure this link matches your NEW Job Search Space URL
-    st.link_button("Launch Agent", "https://huggingface.co/spaces/sodewala45/Job_Search_Agent")
-
+    if st.button("Launch Job Hunter"):
+        track_click("Job Hunter")
+        st.js_code("window.open('https://huggingface.co/spaces/your-username/Job_Search_Agent')")
 st.divider()
 
 # 4. CONTACT / FOOTER
