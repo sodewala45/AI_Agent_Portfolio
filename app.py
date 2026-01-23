@@ -98,9 +98,12 @@ with footer_col1:
 
 with footer_col2:
     st.write("### 🌍 Global Visitors")
-    # Improved wrapper to handle Hugging Face sandboxing
-    components.html("""
-    <div style="display: flex; justify-content: center; align-items: center; background-color: white; border-radius: 10px; padding: 10px;">
-        <script type="text/javascript" id="clustrmaps" src="https://clustrmaps.com/map_v2.js?d=-RMm3VS_E9b9mkmGW_O58Wee3vYnV3UGDJs2xuT2fMU&cl=ffffff&w=a"></script>
-    </div>
-    """, height=250)
+    # This uses the image-based tracker which bypasses HF iframe restrictions
+    st.markdown(f"""
+        <div style="text-align: center; background: white; padding: 10px; border-radius: 10px;">
+            <a href="https://clustrmaps.com/site/1bxxx" title="Visit tracker">
+                <img src="https://www.clustrmaps.com/map_v2.png?d=-RMm3VS_E9b9mkmGW_O58Wee3vYnV3UGDJs2xuT2fMU&cl=ffffff" 
+                     style="width: 100%; border-radius: 5px;" />
+            </a>
+        </div>
+    """, unsafe_allow_html=True)
