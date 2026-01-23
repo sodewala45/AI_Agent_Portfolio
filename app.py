@@ -98,9 +98,9 @@ with footer_col1:
 
 with footer_col2:
     st.write("### 🌍 Global Visitors")
-    # Your specific ClustrMaps Script
+    # Improved wrapper to handle Hugging Face sandboxing
     components.html("""
-    <div style="text-align: center;">
-        <script type="text/javascript" id="clustrmaps" src="//clustrmaps.com/map_v2.js?d=-RMm3VS_E9b9mkmGW_O58Wee3vYnV3UGDJs2xuT2fMU&cl=ffffff&w=a"></script>
+    <div style="display: flex; justify-content: center; align-items: center; background-color: white; border-radius: 10px; padding: 10px;">
+        <script type="text/javascript" id="clustrmaps" src="https://clustrmaps.com/map_v2.js?d=-RMm3VS_E9b9mkmGW_O58Wee3vYnV3UGDJs2xuT2fMU&cl=ffffff&w=a"></script>
     </div>
     """, height=250)
